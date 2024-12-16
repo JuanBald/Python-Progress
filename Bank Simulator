@@ -1,0 +1,81 @@
+import random
+import locale
+
+locale.setlocale(locale.LC_ALL, '')
+
+new_balance = random.randint(100, 100000)
+withdrawl_money = 0
+deposit_money = 0
+transaction_history = []
+
+## Introduction
+print('''Welcome to the Banking Program, a user-friendly platform designed to simplify your banking needs and streamline financial transactions.
+With this program, you can perform essential banking activities like depositing funds,
+checking your account balance, withdrawing money, and transferring funds with ease.''')
+
+def withdrawl(Nb):
+    global withdrawl_money
+    withdrawl_money = int(input("Please enter an amount you'd like to withdraw \n"))
+    while Nb < withdrawl_money:
+        withdrawl_money = int(input('''Sorry, it seems like you don't have sufficient funds.
+        Please re-enter a valid amount'''))
+        print(f'As a reminder, you have a total balance of {locale.currency(Nb, grouping=True)}')
+    while withdrawl_money < 0:
+        withdrawl_money = int(input("Invalid amount. Please enter a positive value: \n"))
+    Nb -= withdrawl_money
+    print(f"Withdrawal successful! Your new balance is: {locale.currency(Nb, grouping=True)}")
+    transaction_history.append(f"Withdrew {locale.currency(withdrawl_money, grouping=True)}, New Balance: {locale.currency(Nb, grouping=True)}")
+    return Nb
+
+def deposit(Nb):
+    global deposit_money
+    deposit_money = int(input("Please enter an amount you'd like to deposit \n"))
+    while deposit_money < 0:
+        deposit_money = int(input("Please re-enter a valid amount you'd like to deposit \n"))
+    Nb += deposit_money
+    print(f"Deposit successful! Your new balance is: {locale.currency(Nb, grouping=True)}")
+    transaction_history.append(f"Deposited {locale.currency(deposit_money, grouping=True)}, New Balance: {locale.currency(Nb, grouping=True)}")
+    return Nb
+
+def Balance(Nb):
+    print(f"Your current balance is: {locale.currency(Nb, grouping=True)}")
+    return Nb
+
+def History():
+    if not transaction_history:
+        print("No transactions recorded yet.")
+    else:
+        print('Below shows your transaction history:')
+        for transaction in transaction_history:
+            print(transaction)
+
+def app():
+    while True:
+        try:
+            global new_balance, withdrawl_money, deposit_money
+
+            user_input = int(input('''Please choose an option:
+                                1. Check Balance
+                                2. Withdraw Money
+                                3. Deposit Money
+                                4. Transaction History
+                                5. Exit
+                                \nYour Choice: '''))
+
+            if user_input == 1:
+                Balance(new_balance)
+            elif user_input == 2:
+                new_balance = withdrawl(new_balance)
+            elif user_input == 3:
+                new_balance = deposit(new_balance)
+            elif user_input == 4:
+                History()
+            elif user_input == 5:
+                print("Thank you for using the Banking Program. Goodbye!")
+                break
+            else:
+                print("Invalid option. Please choose a valid option.\n")
+        except ValueError:
+            print("Invalid input. Please enter a number.\n")
+
+app()
