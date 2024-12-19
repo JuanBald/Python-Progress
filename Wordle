@@ -1,0 +1,54 @@
+import random
+
+# Initialize variables
+attempt = 0
+
+# Load and parse words from the file
+with open('five_letter_words.txt', 'r') as file:
+    word_list = file.read().split()
+
+# Select a random target word
+target_word_list = list(random.choice(word_list))
+
+# Game introduction
+print("Welcome to Wordle! Guess the 5-letter word in 5 tries.")
+print("Feedback:")
+print("- 'C' = Correct (right letter, right position)")
+print("- 'P' = Partial (right letter, wrong position)")
+print("- 'X' = Incorrect (letter not in the word)")
+print("Good luck!\n")
+
+# Game loop
+while attempt < 6:
+    user_input = input(f"Attempt {attempt + 1}/6 - Enter your 5-letter guess: ").lower()
+
+    # Validate input
+    while len(user_input) != 5 or not user_input.isalpha():
+        print("Invalid input. Your guess must be a 5-letter word with only letters.")
+        user_input = input(f"Attempt {attempt + 1}/6 - Re-enter your guess: ").lower()
+
+    # Convert input to list and track attempts
+    user_input_as_list = list(user_input)
+    attempt += 1
+
+    # Check for correct guess
+    if user_input_as_list == target_word_list:
+        print(f"Congratulations! You guessed the word '{''.join(target_word_list)}' correctly in {attempt} attempts!")
+        break
+
+    # Generate feedback
+    feedback_list = []
+    for i in range(5):
+        if user_input_as_list[i] == target_word_list[i]:
+            feedback_list.append('C')  # Correct
+        elif user_input_as_list[i] in target_word_list:
+            feedback_list.append('P')  # Partial
+        else:
+            feedback_list.append('X')  # Incorrect
+
+    # Display feedback
+    print("Feedback: ", " ".join(feedback_list), "\n")
+
+else:
+    print(f"Sorry, you've used all your attempts. The correct word was '{''.join(target_word_list)}'. Better luck next time!")
+
